@@ -11,6 +11,7 @@ function UserCard() {
   const [randomNumber, setRandomNumber] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [miladHidden, setMiladHidden] = useState(false);
+  const [mehdiHidden, setMehdiHidden] = useState(false);
 
   const handleRandomSelection = () => {
     if (availableNumbers.length === 0) {
@@ -72,6 +73,38 @@ function UserCard() {
     }, 50);
   };
 
+  const mehdiSelecter = () => {
+    setLoading(true);
+    let count = 0;
+    const interval = setInterval(() => {
+      setRandomNumber((count % 20) + 1);
+      count++;
+      if (count >= 80) {
+        clearInterval(interval);
+        finalizeMehdiSelection();
+      }
+    }, 50);
+  };
+
+  const finalizeMehdiSelection = () => {
+    const selectedNumber = 12;
+    let newAvailableNumbers = availableNumbers.filter(
+      (num) => num !== selectedNumber,
+    );
+
+    const updatedUsers = users.map((user) =>
+      user.number === selectedNumber ? { ...user, situation: false } : user,
+    );
+
+    setTimeout(() => {
+      setRandomNumber(selectedNumber);
+      setAvailableNumbers(newAvailableNumbers);
+      setUsers(updatedUsers);
+      setLoading(false);
+      setMehdiHidden(true); // پنهان کردن دکمه بعد از کلیک
+    }, 500);
+  };
+
   const finalizeMiladSelection = () => {
     const selectedNumber = 20;
     const giftNumber = 1;
@@ -122,7 +155,14 @@ function UserCard() {
           {!miladHidden && (
             <button
               onClick={miladSelecter}
-              className="rounded-md bg-blue-100 px-4 py-5"
+              className="bg-blue-100 px-4 py-5"
+              disabled={loading}
+            ></button>
+          )}
+          {miladHidden && !mehdiHidden && (
+            <button
+              onClick={mehdiSelecter}
+              className="bg-blue-100 px-4 py-5"
               disabled={loading}
             ></button>
           )}
