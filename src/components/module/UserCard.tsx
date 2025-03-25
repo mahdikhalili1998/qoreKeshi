@@ -26,22 +26,28 @@ function UserCard() {
       (num) => num !== selectedNumber,
     );
 
-    // بروزرسانی وضعیت کاربران و تغییر وضعیت "حاضر" به "حذف شده"
-    const updatedUsers = users.map((user) =>
-      user.number === selectedNumber ? { ...user, situation: false } : user,
-    );
+    // پیدا کردن کاربر انتخاب شده
+    const selectedUser = users.find((user) => user.number === selectedNumber);
 
     // اگر کاربر gift داشته باشد، عدد هدیه هم از لیست اعداد حذف شود
-    const selectedUser = users.find((user) => user.number === selectedNumber);
+    let giftNumber: number | null = null;
     if (selectedUser && selectedUser.gift) {
+      giftNumber = selectedUser.gift;
       newAvailableNumbers = newAvailableNumbers.filter(
-        (num) => num !== selectedUser.gift,
+        (num) => num !== giftNumber,
       );
     }
 
+    // بروزرسانی وضعیت کاربران و تغییر وضعیت افرادی که از لیست حذف شده‌اند
+    const updatedUsers = users.map((user) =>
+      user.number === selectedNumber || user.number === giftNumber
+        ? { ...user, situation: false }
+        : user,
+    );
+
     setRandomNumber(selectedNumber); // ذخیره عدد تصادفی انتخاب شده
     setAvailableNumbers(newAvailableNumbers); // بروزرسانی لیست اعداد
-    setUsers(updatedUsers); // بروزرسانی کاربران
+    setUsers(updatedUsers); // بروزرسانی وضعیت کاربران
   };
 
   return (
@@ -54,6 +60,7 @@ function UserCard() {
         >
           انتخاب عدد تصادفی
         </button>
+
         {/* نمایش عدد انتخاب شده */}
         {randomNumber !== null && (
           <div className="flex items-center gap-2 text-xl font-semibold text-blue-950">
@@ -61,6 +68,7 @@ function UserCard() {
             <span className="text-red-500">{randomNumber}</span>
           </div>
         )}
+
         {/* نمایش لیست اعداد باقی‌مانده */}
         <div className="flex items-center gap-5 text-xl font-semibold text-blue-950">
           <p>لیست اعداد باقی‌مانده : </p>
@@ -80,15 +88,17 @@ function UserCard() {
             className="relative flex w-[90%] flex-col items-center justify-center rounded-md border-2 border-solid border-blue-500 py-12 pt-2"
             key={item.id}
           >
-            {/* لایه قرمز شفاف برای کارت‌های انتخاب شده */}
-            {item.number === randomNumber &&  (
+            {/* لایه قرمز شفاف برای کارت‌های انتخاب شده و حذف شده */}
+            {!item.situation && (
               <div className="absolute inset-0 rounded-md bg-red-500 opacity-40" />
             )}
+
             {/* name & lastName */}
             <p className="mb-3 flex items-center justify-center gap-1 text-xl font-semibold text-blue-950">
               <span>{item.name}</span>
               <span>{item.lastName}</span>
             </p>
+
             {/* profile picture */}
             <Image
               src={item.src}
@@ -98,11 +108,14 @@ function UserCard() {
               priority
               className="w-[13rem] rounded-full border-2 border-solid border-blue-500"
             />
+
             {/* number */}
             <div className="mt-3 flex items-center justify-center gap-4 text-xl font-semibold">
               <span className="text-blue-950">شماره شرکت کننده : </span>
               <span className="text-red-500">{item.number}</span>
             </div>
+
+            {/* gift */}
             <div className="mt-3 flex items-center justify-center gap-4 text-xl font-semibold">
               <span className="text-blue-950"> شماره جایزه : </span>
               <span
@@ -111,6 +124,7 @@ function UserCard() {
                 {item.gift === null ? "ندارد" : item.gift}
               </span>
             </div>
+
             {/* situation */}
             <div className="mt-3 flex items-center justify-center gap-4 text-xl font-semibold">
               <span>وضعیت : </span>
