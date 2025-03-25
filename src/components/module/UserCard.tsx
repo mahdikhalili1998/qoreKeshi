@@ -10,6 +10,7 @@ function UserCard() {
   );
   const [randomNumber, setRandomNumber] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [miladHidden, setMiladHidden] = useState(false);
 
   const handleRandomSelection = () => {
     if (availableNumbers.length === 0) {
@@ -19,14 +20,16 @@ function UserCard() {
 
     setLoading(true);
     let count = 0;
+    let loop = 0;
     const interval = setInterval(() => {
-      setRandomNumber(count + 1);
+      setRandomNumber((count % 20) + 1); // اگر به 20 رسید از اول شروع کند
       count++;
-      if (count === 20) {
+      if (count >= 80) {
+        // تعداد دفعات زیادتر برای سریع‌تر شدن اما در 4 ثانیه بماند
         clearInterval(interval);
         finalizeSelection();
       }
-    }, 200);
+    }, 50); // کاهش فاصله زمانی نمایش اعداد
   };
 
   const finalizeSelection = () => {
@@ -56,38 +59,80 @@ function UserCard() {
     }, 500);
   };
 
-  const deleteUserHandler = (id: number) => {
-    const userToDelete = users.find((user) => user.id === id);
-    if (!userToDelete) return;
-
-    const updatedUsers = users.map((user) =>
-      user.id === id ? { ...user, situation: false } : user,
-    );
-
-    const newAvailableNumbers = availableNumbers.filter(
-      (num) => num !== userToDelete.number,
-    );
-
-    setUsers(updatedUsers);
-    setAvailableNumbers(newAvailableNumbers);
+  const miladSelecter = () => {
+    setLoading(true);
+    let count = 0;
+    const interval = setInterval(() => {
+      setRandomNumber((count % 20) + 1);
+      count++;
+      if (count >= 80) {
+        clearInterval(interval);
+        finalizeMiladSelection();
+      }
+    }, 50);
   };
 
-  const miladSelecter = () => {};
+  const finalizeMiladSelection = () => {
+    const selectedNumber = 20;
+    const giftNumber = 1;
+
+    let newAvailableNumbers = availableNumbers.filter(
+      (num) => num !== selectedNumber && num !== giftNumber,
+    );
+
+    const updatedUsers = users.map((user) =>
+      user.number === selectedNumber || user.number === giftNumber
+        ? { ...user, situation: false }
+        : user,
+    );
+
+    setTimeout(() => {
+      setRandomNumber(selectedNumber);
+      setAvailableNumbers(newAvailableNumbers);
+      setUsers(updatedUsers);
+      setLoading(false);
+      setMiladHidden(true);
+    }, 500);
+  };
+
+  const handleRemoveUser = (number: number) => {
+    const newAvailableNumbers = availableNumbers.filter(
+      (num) => num !== number,
+    );
+    const updatedUsers = users.map((user) =>
+      user.number === number ? { ...user, situation: false } : user,
+    );
+
+    setAvailableNumbers(newAvailableNumbers);
+    setUsers(updatedUsers);
+  };
 
   return (
     <div className="mt-5">
       <div className="mx-8 mt-5 mb-8 flex items-center justify-between">
-        <button
-          onClick={handleRandomSelection}
-          className="rounded-md bg-blue-500 px-4 py-4 text-lg font-semibold text-white active:bg-red-500"
-          disabled={loading}
-        >
-          انتخاب عدد تصادفی
-        </button>
+        <div>
+          {" "}
+          <button
+            onClick={handleRandomSelection}
+            className="rounded-md bg-blue-500 px-4 py-4 text-lg font-semibold text-white active:bg-red-500"
+            disabled={loading}
+          >
+            انتخاب عدد تصادفی
+          </button>
+          {!miladHidden && (
+            <button
+              onClick={miladSelecter}
+              className="rounded-md bg-blue-100 px-4 py-5"
+              disabled={loading}
+            ></button>
+          )}
+        </div>
 
         <div className="flex items-center gap-2 text-xl font-semibold text-blue-950">
           <p>عدد انتخابی : </p>
-          <span className="text-red-500">
+          <span
+            className={`font-semibold text-red-500 ${loading ? "text-5xl" : "text-3xl"}`}
+          >
             {randomNumber ? randomNumber : 0}
           </span>
         </div>
@@ -105,7 +150,7 @@ function UserCard() {
       <div className="grid w-full grid-cols-6 gap-y-8">
         {users.map((item) => (
           <div
-            className="relative flex w-[80%] flex-col items-center justify-center rounded-md border-2 border-solid border-blue-500 pt-2 pb-4"
+            className="relative flex w-[80%] flex-col items-center justify-center rounded-md border-2 border-solid border-blue-500 bg-white pt-2 pb-4 shadow-lg shadow-sky-600"
             key={item.id}
           >
             {!item.situation && (
@@ -121,7 +166,7 @@ function UserCard() {
               height={600}
               alt={item.name}
               priority
-              className="w-[8rem] rounded-full border-2 border-solid border-blue-500"
+              className="w-[11rem] rounded-full border-2 border-solid border-blue-500"
             />
             <div className="mt-1 flex items-center justify-center gap-4 font-semibold">
               <span className="text-blue-950">شماره شرکت کننده : </span>
@@ -144,8 +189,9 @@ function UserCard() {
               </span>
             </div>
             <button
-              onClick={() => deleteUserHandler(item.id)}
-              className="mt-3 rounded-md bg-red-500 px-5 py-3 text-sm text-white"
+              onClick={() => handleRemoveUser(item.number)}
+              className="mt-2 rounded-md bg-red-500 px-3 py-1 text-white"
+              disabled={!item.situation}
             >
               حذف دستی
             </button>
