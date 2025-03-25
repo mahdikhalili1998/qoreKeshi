@@ -47,7 +47,7 @@ export const userInfo = [
   },
   {
     name: "الهه",
-    lastName: "",
+    lastName: "زمانی",
     number: 6,
     id: 6,
     gift: null,
@@ -100,13 +100,13 @@ export const userInfo = [
     src: "/image/nobody.jpg",
   },
   {
-    name: "خالی",
-    lastName: "",
+    name: "بیسکوییت",
+    lastName: "خلیلی",
     number: 12,
     id: 12,
     gift: null,
     situation: true,
-    src: "/image/nobody.jpg",
+    src: "/image/mahdi.jpg",
   },
   {
     name: "زهره",
@@ -145,13 +145,13 @@ export const userInfo = [
     src: "/image/sadi.png",
   },
   {
-    name: "بیسکوییت",
-    lastName: "خلیلی",
+    name: "خالی",
+    lastName: "",
     number: 17,
     id: 17,
     gift: null,
     situation: true,
-    src: "/image/mahdi.jpg",
+    src: "/image/nobody.jpg",
   },
   {
     name: "رمزیه",

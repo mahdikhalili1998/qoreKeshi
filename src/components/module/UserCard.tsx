@@ -69,26 +69,27 @@ function UserCard() {
 
   return (
     <div className="mt-5">
-      <div className="mx-3 mt-5 mb-8 flex items-center justify-between">
+      <div className="mx-8 mt-5 mb-8 flex items-center justify-between">
         {/* دکمه برای انتخاب عدد تصادفی */}
         <button
           onClick={handleRandomSelection}
-          className="rounded-md bg-blue-500 px-4 py-2 text-white"
+          className="rounded-md active:bg-red-500 bg-blue-500 px-4 py-4 text-lg font-semibold text-white"
         >
           انتخاب عدد تصادفی
         </button>
 
         {/* نمایش عدد انتخاب شده */}
-        {randomNumber !== null && (
-          <div className="flex items-center gap-2 text-xl font-semibold text-blue-950">
-            <p>عدد انتخاب شده : </p>
-            <span className="text-red-500">{randomNumber}</span>
-          </div>
-        )}
+
+        <div className="flex items-center gap-2 text-xl font-semibold text-blue-950">
+          <p>عدد انتخابی : </p>
+          <span className="text-red-500">
+            {randomNumber ? randomNumber : 0}
+          </span>
+        </div>
 
         {/* نمایش لیست اعداد باقی‌مانده */}
         <div className="flex items-center gap-5 text-xl font-semibold text-blue-950">
-          <p>لیست اعداد باقی‌مانده : </p>
+          <p>اعداد باقی مانده : </p>
           <ul className="dir flex items-center gap-7">
             {availableNumbers.map((number) => (
               <li key={number} className="text-blue-500">
@@ -99,10 +100,10 @@ function UserCard() {
         </div>
       </div>
 
-      <div className="grid w-full grid-cols-5 gap-y-8">
+      <div className="grid w-full grid-cols-6 gap-y-8">
         {users.map((item) => (
           <div
-            className="relative flex w-[90%] flex-col items-center justify-center rounded-md border-2 border-solid border-blue-500 py-12 pt-2"
+            className="relative flex w-[80%] flex-col items-center justify-center rounded-md border-2 border-solid border-blue-500 pt-2 pb-4"
             key={item.id}
           >
             {/* لایه قرمز شفاف برای کارت‌های انتخاب شده و حذف شده */}
@@ -111,7 +112,7 @@ function UserCard() {
             )}
 
             {/* name & lastName */}
-            <p className="mb-3 flex items-center justify-center gap-1 text-xl font-semibold text-blue-950">
+            <p className="mb-1 flex items-center justify-center gap-1 text-xl font-semibold text-blue-950">
               <span>{item.name}</span>
               <span>{item.lastName}</span>
             </p>
@@ -123,17 +124,17 @@ function UserCard() {
               height={600}
               alt={item.name}
               priority
-              className="w-[13rem] rounded-full border-2 border-solid border-blue-500"
+              className="w-[8rem] rounded-full border-2 border-solid border-blue-500"
             />
 
             {/* number */}
-            <div className="mt-3 flex items-center justify-center gap-4 text-xl font-semibold">
+            <div className="mt-1 flex items-center justify-center gap-4 font-semibold">
               <span className="text-blue-950">شماره شرکت کننده : </span>
               <span className="text-red-500">{item.number}</span>
             </div>
 
             {/* gift */}
-            <div className="mt-3 flex items-center justify-center gap-4 text-xl font-semibold">
+            <div className="mt-1 flex items-center justify-center gap-4 font-semibold">
               <span className="text-blue-950"> شماره جایزه : </span>
               <span
                 className={`${item.gift ? "text-orange-500" : "text-red-500"}`}
@@ -143,7 +144,7 @@ function UserCard() {
             </div>
 
             {/* situation */}
-            <div className="mt-3 flex items-center justify-center gap-4 text-xl font-semibold">
+            <div className="mt-1 flex items-center justify-center gap-4 font-semibold">
               <span>وضعیت : </span>
               <span
                 className={`${item.situation ? "text-green-500" : "text-red-500"}`}
@@ -154,7 +155,7 @@ function UserCard() {
             {/* delete manually bt */}
             <button
               onClick={() => deleteUserHandler(item.id)}
-              className="mt-3 rounded-md bg-red-500 px-5 py-3 text-lg text-white"
+              className="mt-3 rounded-md bg-red-500 px-5 py-3 text-sm text-white"
             >
               حذف دستی
             </button>
