@@ -144,10 +144,9 @@ function UserCard() {
     <div className="mt-5">
       <div className="mx-8 mt-5 mb-8 flex items-center justify-between">
         <div>
-          {" "}
           <button
             onClick={handleRandomSelection}
-            className="rounded-md bg-blue-500 px-4 py-4 text-lg font-semibold text-white active:bg-red-500"
+            className="rounded-md bg-blue-500 px-4 py-4 text-lg font-semibold text-white "
             disabled={loading}
           >
             انتخاب عدد تصادفی
