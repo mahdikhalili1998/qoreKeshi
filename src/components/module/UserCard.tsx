@@ -50,6 +50,23 @@ function UserCard() {
     setUsers(updatedUsers); // بروزرسانی وضعیت کاربران
   };
 
+  //   delete user manually
+  const deleteUserHandler = (id: number) => {
+    const userToDelete = users.find((user) => user.id === id);
+    if (!userToDelete) return;
+
+    const updatedUsers = users.map((user) =>
+      user.id === id ? { ...user, situation: false } : user,
+    );
+
+    const newAvailableNumbers = availableNumbers.filter(
+      (num) => num !== userToDelete.number,
+    );
+
+    setUsers(updatedUsers);
+    setAvailableNumbers(newAvailableNumbers);
+  };
+
   return (
     <div className="mt-5">
       <div className="mx-3 mt-5 mb-8 flex items-center justify-between">
@@ -134,6 +151,13 @@ function UserCard() {
                 {item.situation ? "حاضر" : "حذف شده"}
               </span>
             </div>
+            {/* delete manually bt */}
+            <button
+              onClick={() => deleteUserHandler(item.id)}
+              className="mt-3 rounded-md bg-red-500 px-5 py-3 text-lg text-white"
+            >
+              حذف دستی
+            </button>
           </div>
         ))}
       </div>
