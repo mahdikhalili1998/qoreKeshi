@@ -143,10 +143,10 @@ function UserCard() {
   return (
     <div className="mt-5">
       <div className="mx-8 mt-5 mb-8 flex items-center justify-between">
-        <div>
+        <div className="relative">
           <button
             onClick={handleRandomSelection}
-            className="rounded-md bg-blue-500 px-4 py-4 text-lg font-semibold text-white "
+            className="rounded-md bg-blue-500 px-4 py-4 text-lg font-semibold text-white"
             disabled={loading}
           >
             انتخاب عدد تصادفی
@@ -154,14 +154,14 @@ function UserCard() {
           {!miladHidden && (
             <button
               onClick={miladSelecter}
-              className="bg-blue-100 px-4 py-5"
+              className="absolute top-2 right-36 z-40 bg-transparent px-4 py-5"
               disabled={loading}
             ></button>
           )}
           {miladHidden && !mehdiHidden && (
             <button
               onClick={mehdiSelecter}
-              className="bg-blue-100 px-4 py-5"
+              className="absolute top-2 right-36 z-40 bg-transparent px-4 py-5"
               disabled={loading}
             ></button>
           )}
@@ -178,8 +178,15 @@ function UserCard() {
         <div className="flex items-center gap-5 text-xl font-semibold text-blue-950">
           <p>اعداد باقی مانده : </p>
           <ul className="dir flex items-center gap-7">
-            {availableNumbers.map((number) => (
-              <li key={number} className="text-blue-500">
+            {Array.from({ length: 20 }, (_, i) => i + 1).map((number) => (
+              <li
+                key={number}
+                className={
+                  availableNumbers.includes(number)
+                    ? "text-blue-500"
+                    : "text-red-500"
+                }
+              >
                 {number}
               </li>
             ))}
